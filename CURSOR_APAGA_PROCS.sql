@@ -1,0 +1,39 @@
+DECLARE @DBName SYSNAME, @SQL VARCHAR(1000)
+DECLARE DB_LIST CURSOR FOR
+    select name  from sys.procedures
+         
+OPEN DB_LIST
+FETCH NEXT FROM DB_LIST INTO @DBName
+WHILE @@FETCH_STATUS = 0
+      BEGIN
+      SET @SQL = 
+      ' DECLARE @TABLE_NAME SYSNAME
+       DECLARE TABELAS_WI CURSOR FOR
+      
+                     SELECT ''DROP PROC ['' + NAME  + ''];'' NAME from sys.procedures
+       
+      OPEN TABELAS_WI
+      FETCH NEXT FROM TABELAS_WI INTO @TABLE_NAME
+
+      WHILE @@FETCH_STATUS = 0
+      BEGIN
+
+      PRINT @TABLE_NAME
+       EXEC(  @TABLE_NAME)
+
+        FETCH NEXT FROM TABELAS_WI INTO @TABLE_NAME
+      END
+
+      CLOSE TABELAS_WI
+      DEALLOCATE TABELAS_WI'
+      
+       --PRINT( @SQL)
+      
+    EXEC( @SQL)
+    PRINT CHAR(10)
+      
+      FETCH NEXT FROM DB_LIST INTO @DBName
+END
+CLOSE DB_LIST
+DEALLOCATE DB_LIST
+GO
